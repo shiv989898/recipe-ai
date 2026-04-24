@@ -36,7 +36,7 @@ export async function generateRecipe(dishName: string): Promise<Recipe> {
 
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: "gemini-3-flash-preview",
       contents: `Generate a detailed recipe for "${dishName}". Include:
 1. Prep time, cook time, servings.
 2. Short description.

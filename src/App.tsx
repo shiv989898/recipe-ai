@@ -121,27 +121,27 @@ export default function App() {
       </nav>
 
       <main className="flex-1 px-6 md:px-12 grid grid-cols-12 gap-12 items-start py-6 md:py-10 max-w-[1600px] mx-auto w-full">
-        {/* Left Section: Bold Search Interface - Only show on search tab or if searching */}
+        {/* Left Section: Bold Search Interface - Only show on search tab when no recipe is active */}
         <AnimatePresence mode="wait">
-          {currentTab === "search" && (
+          {currentTab === "search" && !recipe && (
             <motion.div 
               key="search-ui"
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -30 }}
-              className="col-span-12 lg:col-span-5 flex flex-col gap-12"
+              exit={{ opacity: 0, x: -50, filter: "blur(10px)", transition: { duration: 0.5 } }}
+              className="col-span-12 lg:col-span-5 flex flex-col gap-16"
             >
               <div>
                 <motion.h1 
                   initial={{ opacity: 0, y: 40 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                  className="text-[64px] md:text-[84px] lg:text-[100px] leading-[0.8] font-black uppercase tracking-tighter text-brand-dark"
+                  className="text-[72px] md:text-[96px] lg:text-[110px] leading-[0.75] font-black uppercase tracking-[-0.08em] text-brand-dark"
                 >
-                  Find <br/>Your <br/><span className="text-brand-accent">Next</span> <br/>Meal.
+                  Find <br/>Your <br/><span className="text-brand-accent italic">Next</span> <br/>Meal.
                 </motion.h1>
-                <p className="mt-8 text-lg font-bold text-brand-dark/60 leading-tight max-w-xs">
-                  Describe a dish, an ingredient, or a craving. Our AI builds the perfect recipe instantly.
+                <p className="mt-10 text-xl font-medium text-brand-dark/70 leading-relaxed max-w-sm">
+                  Describe a dish, an ingredient, or a craving. Our AI builds the perfect recipe instantly with precise neural analysis.
                 </p>
               </div>
 
@@ -149,22 +149,27 @@ export default function App() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
-                className="flex flex-col gap-8"
+                className="flex flex-col gap-10"
               >
                 <form onSubmit={handleSearch} className="group relative">
-                  <input 
-                    type="text" 
-                    placeholder="e.g. Lemon Basil Salmon"
-                    value={dishName}
-                    onChange={(e) => setDishName(e.target.value)}
-                    className="w-full bg-transparent border-b-4 border-brand-dark py-4 text-2xl font-black placeholder:opacity-20 focus:outline-none focus:border-brand-accent transition-colors"
-                  />
+                  <div className="relative">
+                    <input 
+                      type="text" 
+                      placeholder="e.g. Lemon Basil Salmon"
+                      value={dishName}
+                      onChange={(e) => setDishName(e.target.value)}
+                      className="w-full bg-white/50 backdrop-blur-md border-b-4 border-brand-dark px-0 py-6 text-3xl font-bold placeholder:opacity-20 focus:outline-none focus:border-brand-accent transition-all focus:bg-white focus:px-4 rounded-t-2xl"
+                    />
+                  </div>
                   <button 
                     disabled={loading || !dishName.trim()}
-                    className="mt-8 w-full bg-brand-green text-white py-6 px-10 rounded-full text-lg font-black uppercase tracking-widest flex justify-between items-center hover:bg-brand-dark hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
+                    className="mt-10 w-full bg-brand-green text-white py-8 px-12 rounded-[32px] text-xl font-black uppercase tracking-widest flex justify-between items-center hover:bg-brand-dark hover:shadow-[0_20px_40px_-10px_rgba(45,90,39,0.3)] active:scale-95 transition-all disabled:opacity-50 shadow-lg"
                   >
-                    <span>{loading ? "Generating..." : "Generate Recipe"}</span>
-                    {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : <Search className="w-6 h-6" />}
+                    <span className="flex items-center gap-4">
+                      {loading ? "Neural Computation..." : "Materialize Dish"}
+                      <Sparkles className={`w-6 h-6 ${loading ? 'animate-spin' : ''}`} />
+                    </span>
+                    <Search className="w-8 h-8" />
                   </button>
                 </form>
 
@@ -197,8 +202,8 @@ export default function App() {
           )}
         </AnimatePresence>
 
-        {/* Right Section: Content Display */}
-        <div className={`col-span-12 ${currentTab === "search" ? "lg:col-span-7" : ""}`}>
+        {/* Right Section: Content Display - Expands to full width when search is hidden */}
+        <div className={`col-span-12 transition-all duration-700 ease-[0.16,1,0.3,1] ${currentTab === "search" && !recipe ? "lg:col-span-7" : "lg:col-span-12"}`}>
           <AnimatePresence mode="wait">
             {currentTab === "search" && (
               <motion.div
