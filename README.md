@@ -1,20 +1,42 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# ZestRecipe AI 🍳
 
-# Run and deploy your AI Studio app
+An AI-powered culinary companion built with React, Tailwind CSS, and Gemini AI. ZestRecipe AI generates detailed recipes, provides cooking instructions, and manages your culinary history.
 
-This contains everything you need to run your app locally.
+## Features ✨
 
-View your app in AI Studio: https://ai.studio/apps/3286d89c-e052-4e0f-b867-55725358a349
+- **AI Recipe Generation**: Instantly generate recipes for any dish name.
+- **Save for Later**: Keep track of your favorite recipes with a built-in saving system.
+- **Search History**: Automatically save your recent searches for quick access.
+- **Bold Typography Design**: A modern, technical, and striking user interface with a "Bold Typography" theme.
+- **Clean & Fast**: Optimized performance using Vite and Gemini Flash.
+- **Persistence**: Your history and saved recipes are stored locally in your browser.
 
-## Run Locally
+## Tech Stack 🛠️
 
-**Prerequisites:**  Node.js
+- **Framework**: React 19
+- **Styling**: Tailwind CSS 4
+- **Animations**: Framer Motion
+- **AI Engine**: Google Gemini (via `@google/genai`)
+- **Icons**: Lucide React
+- **Build Tool**: Vite
 
+## Getting Started 🚀
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+1.  **Configure API Key**: Ensure your `GEMINI_API_KEY` is set in the environment variables.
+2.  **Install Dependencies**:
+    ```bash
+    npm install
+    ```
+3.  **Run Development Server**:
+    ```bash
+    npm run dev
+    ```
+
+## Usage 📖
+
+- **Search**: Enter a dish name in the search bar and click "Generate Recipe".
+- **Save**: Click the bookmark icon on any recipe to save it to your "Saved" tab.
+- **History**: Access the "History" tab to see your previously generated recipes.
+
+---
+*Created with passion for food and technology.*

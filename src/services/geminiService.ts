@@ -17,42 +17,45 @@ export async function generateRecipe(dishName: string): Promise<Recipe> {
     throw new Error("GEMINI_API_KEY is not configured.");
   }
 
-  const response = await ai.models.generateContent({
-    model: "gemini-3-flash-preview",
-    contents: `Generate a detailed recipe for "${dishName}". Include prep time, cook time, servings, a short description, ingredients, and step-by-step instructions.`,
-    config: {
-      responseMimeType: "application/json",
-      responseSchema: {
-        type: Type.OBJECT,
-        properties: {
-          name: { type: Type.STRING },
-          description: { type: Type.STRING },
-          prepTime: { type: Type.STRING },
-          cookTime: { type: Type.STRING },
-          servings: { type: Type.STRING },
-          ingredients: {
-            type: Type.ARRAY,
-            items: { type: Type.STRING }
-          },
-          instructions: {
-            type: Type.ARRAY,
-            items: { type: Type.STRING }
-          }
-        },
-        required: ["name", "description", "prepTime", "cookTime", "servings", "ingredients", "instructions"]
-      }
-    }
-  });
-
-  const text = response.text;
-  if (!text) {
-    throw new Error("Failed to generate recipe.");
-  }
-
   try {
+    const response = await ai.models.generateContent({
+      model: "gemini-flash-latest",
+      contents: `Generate a detailed recipe for "${dishName}". Include prep time, cook time, servings, a short description, ingredients, and step-by-step instructions.`,
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            name: { type: Type.STRING },
+            description: { type: Type.STRING },
+            prepTime: { type: Type.STRING },
+            cookTime: { type: Type.STRING },
+            servings: { type: Type.STRING },
+            ingredients: {
+              type: Type.ARRAY,
+              items: { type: Type.STRING }
+            },
+            instructions: {
+              type: Type.ARRAY,
+              items: { type: Type.STRING }
+            }
+          },
+          required: ["name", "description", "prepTime", "cookTime", "servings", "ingredients", "instructions"]
+        }
+      }
+    });
+
+    const text = response.text;
+    if (!text) {
+      throw new Error("The culinary AI returned an empty response. Please try a different dish name.");
+    }
+
     return JSON.parse(text);
-  } catch (e) {
-    console.error("Failed to parse recipe JSON:", text);
-    throw new Error("Invalid recipe data received from AI.");
+  } catch (e: any) {
+    console.error("AI Generation Error:", e);
+    if (e?.message?.includes("503") || e?.message?.includes("overloaded")) {
+      throw new Error("The kitchen is currently overloaded! Please wait a moment and try again.");
+    }
+    throw new Error("Failed to generate recipe. Please check your spelling or try another dish.");
   }
 }
