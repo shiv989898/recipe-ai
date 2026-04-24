@@ -85,19 +85,11 @@ export default function App() {
   const isRecipeSaved = (name: string) => savedRecipes.some(r => r.name === name);
 
   return (
-    <div className="min-h-screen flex flex-col mesh-gradient overflow-x-hidden selection:bg-brand-accent/20">
+    <div className="min-h-screen flex flex-col mesh-gradient overflow-x-hidden selection:bg-brand-accent/20 accelerate">
       {/* Immersive Background Orbs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-        <motion.div 
-          animate={{ scale: [1, 1.2, 1], x: [0, 50, 0], y: [0, 30, 0] }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute top-[-15%] right-[-10%] w-[60%] h-[60%] bg-brand-accent/5 rounded-full blur-[140px]" 
-        />
-        <motion.div 
-          animate={{ scale: [1, 1.3, 1], x: [0, -40, 0], y: [0, -50, 0] }}
-          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-          className="absolute bottom-[-20%] left-[-15%] w-[50%] h-[50%] bg-brand-green/8 rounded-full blur-[120px]" 
-        />
+        <div className="absolute top-[-15%] right-[-10%] w-[60%] h-[60%] bg-brand-accent/5 rounded-full blur-[100px]" />
+        <div className="absolute bottom-[-20%] left-[-15%] w-[50%] h-[50%] bg-brand-green/8 rounded-full blur-[80px]" />
       </div>
 
       {/* Header Navigation */}
@@ -140,17 +132,17 @@ export default function App() {
           {currentTab === "search" && !recipe && (
             <motion.div 
               key="search-ui"
-              initial={{ opacity: 0, x: -60, filter: "blur(20px)" }}
-              animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-              exit={{ opacity: 0, x: -100, filter: "blur(40px)", transition: { duration: 0.6 } }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              className="col-span-12 lg:col-span-5 flex flex-col gap-20 py-12"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4 }}
+              className="col-span-12 lg:col-span-5 flex flex-col gap-20 py-12 accelerate"
             >
-              <div className="perspective-container">
+              <div className="">
                 <motion.h1 
-                  initial={{ opacity: 0, y: 60, rotateX: 30 }}
-                  animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                  transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+                  initial={{ opacity: 0, y: 40 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
                   className="text-[80px] md:text-[100px] lg:text-[130px] leading-[0.75] font-black uppercase tracking-[-0.08em] text-brand-dark"
                 >
                   Find <br/>Your <br/><span className="text-brand-accent italic relative">
@@ -258,19 +250,14 @@ export default function App() {
                     <div className="relative">
                       <motion.div
                         animate={{ 
-                          scale: [1, 1.2, 1],
-                          rotate: [0, 180, 360]
+                          rotate: 360
                         }}
-                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
                         className="relative z-10"
                       >
-                        <Sparkles className="w-24 h-24 text-brand-accent drop-shadow-[0_0_20px_rgba(62,207,142,0.5)]" />
+                        <Sparkles className="w-24 h-24 text-brand-accent shadow-[0_0_20px_rgba(62,207,142,0.3)]" />
                       </motion.div>
-                      <motion.div 
-                        animate={{ opacity: [0.2, 0.5, 0.2], scale: [1, 1.5, 1] }}
-                        transition={{ duration: 3, repeat: Infinity }}
-                        className="absolute inset-0 bg-brand-accent filter blur-2xl rounded-full -z-10"
-                      />
+                      <div className="absolute inset-0 bg-brand-accent/20 blur-xl rounded-full -z-10" />
                     </div>
                     <div className="text-center relative z-10">
                       <p className="text-[14px] font-black uppercase tracking-[0.6em] text-brand-dark mb-4 drop-shadow-sm">

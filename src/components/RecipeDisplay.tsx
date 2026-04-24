@@ -43,18 +43,13 @@ export function RecipeDisplay({ recipe, isSaved, onSave }: RecipeDisplayProps) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.9, y: 100, rotateX: 15 }}
-      animate={{ opacity: 1, scale: 1, y: 0, rotateX: 0 }}
-      transition={{ 
-        duration: 1.4, 
-        ease: [0.16, 1, 0.3, 1],
-        scale: { type: "spring", stiffness: 100, damping: 20 }
-      }}
-      className="bg-white h-full min-h-[800px] rounded-[64px] shadow-[0_80px_160px_-40px_rgba(15,23,17,0.15)] border border-white p-10 md:p-16 flex flex-col relative overflow-hidden group/recipe perspective-container"
+      initial={{ opacity: 0, scale: 0.98 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="bg-white h-full min-h-[800px] rounded-[64px] shadow-[0_40px_80px_-20px_rgba(15,23,17,0.1)] border border-white p-10 md:p-16 flex flex-col relative overflow-hidden group/recipe accelerate"
     >
       {/* Cinematic Atmosphere */}
-      <div className="absolute -top-32 -right-32 w-[600px] h-[600px] bg-brand-accent/10 rounded-full blur-[160px] pointer-events-none animate-pulse" />
-      <div className="absolute -bottom-32 -left-32 w-[600px] h-[600px] bg-brand-green/10 rounded-full blur-[160px] pointer-events-none" />
+      <div className="absolute -top-32 -right-32 w-[600px] h-[600px] bg-brand-accent/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute -bottom-32 -left-32 w-[600px] h-[600px] bg-brand-green/5 rounded-full blur-[100px] pointer-events-none" />
       
       {/* Header Grid */}
       <div className="flex flex-col xl:flex-row justify-between items-start gap-12 mb-20 relative z-10">
@@ -70,9 +65,9 @@ export function RecipeDisplay({ recipe, isSaved, onSave }: RecipeDisplayProps) {
           </motion.div>
           
           <motion.h2 
-            initial={{ opacity: 0, y: 60 }}
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.6 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
             className="text-7xl md:text-8xl lg:text-9xl font-black uppercase leading-[0.8] tracking-[-0.06em] mb-12 text-brand-dark"
           >
             {recipe.name}
@@ -230,20 +225,16 @@ export function RecipeDisplay({ recipe, isSaved, onSave }: RecipeDisplayProps) {
                         <stop offset="100%" stopColor={n.color} stopOpacity={0.2} />
                       </linearGradient>
                     ))}
-                    <filter id="shadow-bar-ultra" x="-40%" y="-40%" width="180%" height="180%">
-                      <feDropShadow dx="0" dy="30" stdDeviation="20" floodOpacity="0.5"/>
-                    </filter>
                   </defs>
                   <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 16, fontWeight: 900, fill: '#1A2E19', opacity: 0.7 }} />
                   <Tooltip 
-                    cursor={{ fill: 'rgba(255,255,255,0.6)', radius: 24 }}
-                    contentStyle={{ borderRadius: '48px', border: 'none', boxShadow: '0 64px 128px rgba(0,0,0,0.3)', fontSize: '24px', fontWeight: '900', padding: '40px', background: 'white' }}
+                    cursor={{ fill: 'rgba(255,255,255,0.4)', radius: 24 }}
+                    contentStyle={{ borderRadius: '48px', border: 'none', boxShadow: '0 32px 64px rgba(0,0,0,0.1)', fontSize: '24px', fontWeight: '900', padding: '40px', background: 'white' }}
                   />
                   <Bar 
                     dataKey="value" 
                     radius={[24, 24, 0, 0]} 
-                    animationDuration={3000}
-                    style={{ filter: 'url(#shadow-bar-ultra)' }}
+                    animationDuration={2000}
                   >
                     {nutritionData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={`url(#barGrad-${index})`} />
@@ -265,19 +256,19 @@ export function RecipeDisplay({ recipe, isSaved, onSave }: RecipeDisplayProps) {
             <h4 className="text-[15px] font-black uppercase tracking-[0.4em] text-brand-dark/40 mb-16 flex items-center justify-between">
               Sensory Field <Scale className="w-6 h-6 text-brand-accent" />
             </h4>
-            <div className="h-80 w-full animate-pulse-slow">
+            <div className="h-80 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <RadarChart cx="50%" cy="50%" outerRadius="85%" data={flavorData}>
-                  <PolarGrid stroke="#1A2E19" strokeOpacity={0.2} strokeWidth={2} />
-                  <PolarAngleAxis dataKey="subject" tick={{ fontSize: 16, fontWeight: 900, fill: '#1A2E19', opacity: 0.8 }} />
+                  <PolarGrid stroke="#1A2E19" strokeOpacity={0.1} strokeWidth={1} />
+                  <PolarAngleAxis dataKey="subject" tick={{ fontSize: 12, fontWeight: 900, fill: '#1A2E19', opacity: 0.8 }} />
                   <Radar
                     name="Intensity"
                     dataKey="A"
                     stroke="#3ECF8E"
-                    strokeWidth={8}
+                    strokeWidth={4}
                     fill="#3ECF8E"
-                    fillOpacity={0.5}
-                    animationDuration={4000}
+                    fillOpacity={0.4}
+                    animationDuration={2000}
                   />
                 </RadarChart>
               </ResponsiveContainer>
@@ -298,11 +289,6 @@ export function RecipeDisplay({ recipe, isSaved, onSave }: RecipeDisplayProps) {
             <div className="h-80 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <defs>
-                     <filter id="shadow-pie-ultra" x="-80%" y="-80%" width="260%" height="260%">
-                      <feDropShadow dx="0" dy="40" stdDeviation="30" floodOpacity="0.4"/>
-                    </filter>
-                  </defs>
                   <Pie
                     data={timeData}
                     cx="50%"
@@ -311,8 +297,7 @@ export function RecipeDisplay({ recipe, isSaved, onSave }: RecipeDisplayProps) {
                     outerRadius={120}
                     paddingAngle={20}
                     dataKey="value"
-                    animationDuration={3000}
-                    style={{ filter: 'url(#shadow-pie-ultra)' }}
+                    animationDuration={2000}
                     label={({ name, value }) => `${name}: ${value}m`}
                     labelLine={false}
                   >
@@ -320,7 +305,7 @@ export function RecipeDisplay({ recipe, isSaved, onSave }: RecipeDisplayProps) {
                       <Cell key={`cell-${index}`} fill={index === 0 ? '#3ECF8E' : '#0F1711'} stroke="none" />
                     ))}
                   </Pie>
-                  <Tooltip contentStyle={{ borderRadius: '48px', border: 'none', boxShadow: '0 64px 128px rgba(0,0,0,0.3)', fontSize: '24px', fontWeight: '900', padding: '40px', background: 'white' }} />
+                  <Tooltip contentStyle={{ borderRadius: '48px', border: 'none', boxShadow: '0 32px 64px rgba(0,0,0,0.1)', fontSize: '24px', fontWeight: '900', padding: '40px', background: 'white' }} />
                 </PieChart>
               </ResponsiveContainer>
               <div className="flex justify-center gap-12 mt-10">
