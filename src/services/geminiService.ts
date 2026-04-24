@@ -36,14 +36,16 @@ export async function generateRecipe(dishName: string): Promise<Recipe> {
 
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
-      contents: `Generate a detailed recipe for "${dishName}". Include:
-1. Prep time, cook time, servings.
-2. Short description.
-3. Ingredients list.
-4. Step-by-step instructions.
-5. Nutrition facts per serving (calories, protein in grams, carbs in grams, fat in grams).
-6. Flavor profile (scale 1-10 for Sweet, Spicy, Sour, Bitter, Umami).`,
+      model: "gemini-2.0-flash",
+      contents: `Generate a prestigious and advanced culinary recipe for "${dishName}". 
+The output must reflect extreme high-fidelity gastronomy. 
+Include:
+1. Precise prep time, cook time, and yield servings.
+2. An evocative, high-end short description.
+3. A meticulous ingredients list.
+4. Detailed, numbered execution protocol instructions.
+5. Exact nutrition facts per yield unit (calories, protein in grams, carbs in grams, fat in grams).
+6. A sophisticated flavor profile (accurate scale 1-10 for Sweet, Spicy, Sour, Bitter, Umami).`,
       config: {
         responseMimeType: "application/json",
         responseSchema: {

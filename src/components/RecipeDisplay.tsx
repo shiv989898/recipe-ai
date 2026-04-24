@@ -2,8 +2,8 @@ import { motion } from "motion/react";
 import { Recipe } from "../services/geminiService";
 import { Bookmark, BookmarkCheck, Scale, CircleDot, Clock, Utensils } from "lucide-react";
 import { 
-  Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer,
-  BarChart, Bar, XAxis, YAxis, Tooltip, Cell,
+  Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer,
+  BarChart, Bar, XAxis, Tooltip, Cell,
   PieChart, Pie
 } from 'recharts';
 
@@ -23,12 +23,11 @@ export function RecipeDisplay({ recipe, isSaved, onSave }: RecipeDisplayProps) {
   ] : [];
 
   const nutritionData = recipe.nutrition ? [
-    { name: 'Protein', value: recipe.nutrition.protein, color: '#4CAF50' },
-    { name: 'Carbs', value: recipe.nutrition.carbs, color: '#2D5A27' },
-    { name: 'Fat', value: recipe.nutrition.fat, color: '#1A2E19' },
+    { name: 'Protein', value: recipe.nutrition.protein, color: '#3ECF8E' },
+    { name: 'Carbs', value: recipe.nutrition.carbs, color: '#244221' },
+    { name: 'Fat', value: recipe.nutrition.fat, color: '#0F1711' },
   ] : [];
 
-  // Parse time (extracting numbers from strings like "15 mins")
   const getMinutes = (timeStr: string) => {
     const match = timeStr.match(/\d+/);
     return match ? parseInt(match[0]) : 0;
@@ -38,109 +37,148 @@ export function RecipeDisplay({ recipe, isSaved, onSave }: RecipeDisplayProps) {
   const cookMins = getMinutes(recipe.cookTime);
   
   const timeData = [
-    { name: 'Prep', value: prepMins, color: '#4CAF50' },
-    { name: 'Cook', value: cookMins, color: '#2D5A27' },
+    { name: 'Prep', value: prepMins, color: '#3ECF8E' },
+    { name: 'Cook', value: cookMins, color: '#244221' },
   ];
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: 40, filter: "blur(10px)" }}
-      animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-      className="bg-brand-white h-full min-h-[650px] rounded-[40px] shadow-[0_32px_64px_-16px_rgba(45,90,39,0.1)] border border-green-50 p-6 md:p-10 flex flex-col relative overflow-hidden"
+      initial={{ opacity: 0, scale: 0.9, y: 100, rotateX: 15 }}
+      animate={{ opacity: 1, scale: 1, y: 0, rotateX: 0 }}
+      transition={{ 
+        duration: 1.4, 
+        ease: [0.16, 1, 0.3, 1],
+        scale: { type: "spring", stiffness: 100, damping: 20 }
+      }}
+      className="bg-white h-full min-h-[800px] rounded-[64px] shadow-[0_80px_160px_-40px_rgba(15,23,17,0.15)] border border-white p-10 md:p-16 flex flex-col relative overflow-hidden group/recipe perspective-container"
     >
-      {/* Background Subtle Pattern */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-brand-accent/5 rounded-full blur-[120px] -z-10" />
-      <div className="absolute bottom-0 left-0 w-80 h-80 bg-brand-green/5 rounded-full blur-[100px] -z-10" />
-
-      <div className="flex justify-between items-start mb-10 overflow-hidden">
+      {/* Cinematic Atmosphere */}
+      <div className="absolute -top-32 -right-32 w-[600px] h-[600px] bg-brand-accent/10 rounded-full blur-[160px] pointer-events-none animate-pulse" />
+      <div className="absolute -bottom-32 -left-32 w-[600px] h-[600px] bg-brand-green/10 rounded-full blur-[160px] pointer-events-none" />
+      
+      {/* Header Grid */}
+      <div className="flex flex-col xl:flex-row justify-between items-start gap-12 mb-20 relative z-10">
         <div className="flex-1">
-          <div className="overflow-hidden">
-            <motion.h2 
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-              className="text-4xl md:text-5xl font-black uppercase leading-[0.9] tracking-tighter mb-4 text-brand-dark"
-            >
-              {recipe.name}
-            </motion.h2>
-          </div>
-          <div className="flex flex-wrap gap-4 md:gap-6 text-[12px] font-bold opacity-70 uppercase tracking-widest">
-            <div className="flex items-center gap-2 px-4 py-2 bg-brand-bg rounded-full text-brand-dark border border-brand-dark/5">
-              <Clock className="w-4 h-4 text-brand-accent" /> {recipe.prepTime} PREP
-            </div>
-            <div className="flex items-center gap-2 px-4 py-2 bg-brand-bg rounded-full text-brand-dark border border-brand-dark/5">
-              <Utensils className="w-4 h-4 text-brand-green" /> {recipe.cookTime} COOK
-            </div>
-            <div className="flex items-center gap-2 px-4 py-2 bg-brand-bg rounded-full text-brand-dark border border-brand-dark/5">
-              <div className="w-2.5 h-2.5 rounded-full bg-brand-accent"></div> {recipe.servings} SERVINGS
-            </div>
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.5 }}
+            className="flex items-center gap-4 mb-8"
+          >
+            <div className="h-[2px] w-16 bg-brand-accent" />
+            <span className="text-[14px] font-black uppercase tracking-[0.5em] text-brand-accent/80">Neural Gastronomy Synthesis</span>
+          </motion.div>
+          
+          <motion.h2 
+            initial={{ opacity: 0, y: 60 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.6 }}
+            className="text-7xl md:text-8xl lg:text-9xl font-black uppercase leading-[0.8] tracking-[-0.06em] mb-12 text-brand-dark"
+          >
+            {recipe.name}
+          </motion.h2>
+
+          <div className="flex flex-wrap gap-6 md:gap-10">
+            {[
+              { icon: Clock, label: recipe.prepTime, sub: "PREPARATION", color: "brand-accent" },
+              { icon: Utensils, label: recipe.cookTime, sub: "EXECUTION", color: "brand-green" },
+              { icon: CircleDot, label: recipe.servings, sub: "YIELD UNITS", color: "brand-dark" }
+            ].map((item, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 + i * 0.15 }}
+                className="flex items-center gap-8 bg-brand-bg/40 backdrop-blur-xl px-10 py-6 rounded-[40px] border border-white shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-500"
+              >
+                <item.icon className={`w-8 h-8 text-${item.color}`} />
+                <div className="leading-tight">
+                  <p className="text-2xl font-black text-brand-dark">{item.label}</p>
+                  <p className="text-[11px] font-black uppercase tracking-widest opacity-30">{item.sub}</p>
+                </div>
+              </motion.div>
+            ))}
             {recipe.nutrition && (
-              <div className="flex items-center gap-2 px-4 py-2 bg-brand-green/10 rounded-full text-brand-green font-bold border border-brand-green/20">
-                <Scale className="w-4 h-4" /> {recipe.nutrition.calories} KCAL
-              </div>
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 1.2 }}
+                className="flex items-center gap-8 bg-brand-dark text-white px-10 py-6 rounded-[40px] shadow-2xl hover:bg-brand-green transition-colors duration-500"
+              >
+                <Scale className="w-8 h-8 text-brand-accent" />
+                <div className="leading-tight">
+                  <p className="text-2xl font-black">{recipe.nutrition.calories}</p>
+                  <p className="text-[11px] font-black uppercase tracking-widest opacity-40 text-white">KCAL ENERGY</p>
+                </div>
+              </motion.div>
             )}
           </div>
         </div>
-        <button 
+        
+        <motion.button 
+          initial={{ opacity: 0, rotate: 45, scale: 0 }}
+          animate={{ opacity: 1, rotate: 0, scale: 1 }}
+          transition={{ delay: 1.4, type: "spring" }}
           onClick={onSave}
-          className="p-4 rounded-full border border-gray-100 hover:bg-gray-50 transition-all active:scale-95 group shadow-sm bg-white shrink-0 ml-4"
-          title={isSaved ? "Remove from saved" : "Save recipe"}
+          className="p-10 rounded-[48px] border border-brand-dark/5 hover:border-brand-accent/30 bg-white shadow-2xl hover:shadow-[0_40px_80px_-20px_rgba(62,207,142,0.3)] transition-all active:scale-90 group relative flex items-center justify-center self-end xl:self-start"
         >
           {isSaved ? (
-            <BookmarkCheck className="w-6 h-6 text-brand-accent fill-brand-accent" />
+            <BookmarkCheck className="w-12 h-12 text-brand-accent fill-brand-accent" />
           ) : (
-            <Bookmark className="w-6 h-6 text-brand-dark opacity-40 group-hover:opacity-100 transition-opacity" />
+            <Bookmark className="w-12 h-12 text-brand-dark opacity-20 group-hover:opacity-100 transition-opacity" />
           )}
-        </button>
+        </motion.button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12 flex-1 relative z-10">
-        {/* Ingredients Column */}
-        <div className="lg:col-span-5 flex flex-col">
-          <h3 className="text-[12px] font-black uppercase tracking-[0.3em] text-brand-accent mb-8 flex items-center justify-between">
-            <span>Ingredients Inventory</span>
-            <span className="opacity-40">{recipe.ingredients.length} items</span>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-16 lg:gap-24 flex-1 relative z-10">
+        {/* Ingredients Bento */}
+        <div className="lg:col-span-12 xl:col-span-5 flex flex-col">
+          <h3 className="text-[16px] font-black uppercase tracking-[0.6em] text-brand-accent mb-12 flex items-center justify-between border-b-2 border-brand-accent/10 pb-6">
+            <span className="flex items-center gap-6"><div className="w-4 h-4 bg-brand-accent animate-pulse rounded-full" /> Raw Material Archive</span>
+            <span className="opacity-40 text-brand-dark font-display">{recipe.ingredients.length} UNITS</span>
           </h3>
-          <ul className="space-y-4 overflow-y-auto max-h-[400px] lg:max-h-[500px] pr-2 scrollbar-hide">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6 overflow-y-auto max-h-[700px] pr-6 scrollbar-hide">
             {recipe.ingredients.map((ingredient, idx) => (
-              <motion.li 
+              <motion.div 
                 key={idx} 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 + idx * 0.05 }}
-                className="flex items-center gap-5 bg-brand-bg/40 p-4 rounded-2xl border border-white/60 hover:border-brand-accent/30 transition-all hover:bg-white shadow-[0_4px_12px_-4px_rgba(0,0,0,0.05)] group"
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.6 + idx * 0.08 }}
+                className="flex items-center gap-8 bg-brand-bg/20 backdrop-blur-2xl p-8 rounded-[40px] border border-white hover:border-brand-accent/40 hover:bg-white shadow-lg hover:shadow-[0_32px_64px_-16px_rgba(62,207,142,0.2)] transition-all duration-700 group/item"
               >
-                <div className="w-2.5 h-2.5 rounded-full bg-brand-accent/30 group-hover:bg-brand-accent transition-colors shrink-0" />
-                <span className="text-lg font-semibold text-brand-dark group-hover:text-black transition-colors">{ingredient}</span>
-              </motion.li>
+                <div className="w-14 h-14 rounded-3xl bg-white flex items-center justify-center text-2xl font-black text-brand-accent shadow-[inset_0_4px_12px_rgba(0,0,0,0.05)] group-hover/item:scale-110 group-hover/item:rotate-6 transition-all duration-500">
+                  {idx + 1}
+                </div>
+                <span className="text-2xl font-bold text-brand-dark leading-tight group-hover/item:text-black transition-colors">{ingredient}</span>
+              </motion.div>
             ))}
-          </ul>
+          </div>
         </div>
 
-        {/* Instructions Column */}
-        <div className="lg:col-span-7 flex flex-col">
-          <h3 className="text-[12px] font-black uppercase tracking-[0.3em] text-brand-accent mb-8 flex items-center justify-between">
-            <span>Culinary Algorithm</span>
-            <div className="flex gap-2">
-              {[...Array(3)].map((_, i) => <div key={i} className="w-1.5 h-1.5 rounded-full bg-brand-accent/30" />)}
+        {/* Procedures Stream */}
+        <div className="lg:col-span-12 xl:col-span-7 flex flex-col">
+          <h3 className="text-[16px] font-black uppercase tracking-[0.6em] text-brand-accent mb-12 flex items-center justify-between border-b-2 border-brand-accent/10 pb-6">
+            <span className="flex items-center gap-6"><div className="w-4 h-4 bg-brand-green animate-pulse rounded-full" /> Execution Protocol</span>
+            <div className="flex gap-3">
+              {[...Array(3)].map((_, i) => <div key={i} className="w-3 h-3 rounded-full bg-brand-accent/30" />)}
             </div>
           </h3>
-          <div className="space-y-6 overflow-y-auto max-h-[400px] lg:max-h-[500px] pr-4 scrollbar-hide">
+          <div className="space-y-10 overflow-y-auto max-h-[700px] pr-8 scrollbar-hide">
             {recipe.instructions.map((step, idx) => (
               <motion.div 
                 key={idx} 
-                initial={{ opacity: 0, x: 20 }}
+                initial={{ opacity: 0, x: 50 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.4 + idx * 0.1 }}
-                className="flex gap-8 group bg-white p-6 rounded-[32px] hover:shadow-[0_20px_60px_-20px_rgba(45,90,39,0.12)] transition-all border border-brand-dark/5 hover:border-white group"
+                transition={{ delay: 0.8 + idx * 0.2 }}
+                className="flex gap-12 group/step bg-white p-12 rounded-[56px] border border-brand-dark/5 hover:border-white hover:shadow-[0_64px_128px_-32px_rgba(45,90,39,0.15)] transition-all duration-1000 relative overflow-hidden"
               >
-                <div className="relative shrink-0 flex items-center justify-center">
-                  <span className="text-6xl font-black text-brand-dark/5 leading-none transition-colors group-hover:text-brand-accent/20">
+                <div className="absolute top-0 left-0 w-3 h-full bg-brand-accent opacity-0 group-hover/step:opacity-100 transition-all duration-700" />
+                <div className="shrink-0 flex items-start pt-4">
+                  <span className="text-9xl font-black text-brand-dark/5 leading-none transition-all duration-700 group-hover/step:text-brand-accent/10 group-hover/step:translate-x-2">
                     {(idx + 1).toString().padStart(2, '0')}
                   </span>
                 </div>
-                <p className="text-lg leading-relaxed font-medium text-brand-dark group-hover:text-black transition-colors">
+                <p className="text-3xl lg:text-2xl leading-relaxed font-semibold text-brand-dark group-hover/step:text-black transition-colors">
                   {step}
                 </p>
               </motion.div>
@@ -149,46 +187,63 @@ export function RecipeDisplay({ recipe, isSaved, onSave }: RecipeDisplayProps) {
         </div>
       </div>
 
-      {/* Analytics Section - Full Width at Bottom */}
-      <div className="mt-12 lg:mt-16 pt-10 border-t border-brand-bg relative z-10">
-        <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-center text-brand-accent/40 mb-10">Neural Analysis & Metrics</h3>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* 3D-effect Nutrition Bar Chart */}
+      {/* Extreme Fidelity Analytics */}
+      <div className="mt-32 lg:mt-48 pt-32 border-t-2 border-brand-dark/5 relative z-10">
+        <div className="flex flex-col items-center mb-24">
           <motion.div 
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="bg-brand-bg/40 backdrop-blur-3xl rounded-[48px] p-8 lg:p-10 border border-white shadow-[0_24px_48px_-12px_rgba(0,0,0,0.08)] group hover:shadow-[0_48px_80px_-24px_rgba(45,90,39,0.2)] transition-all duration-700"
+            className="px-10 py-3 bg-brand-accent/15 rounded-full text-brand-accent text-[14px] font-black tracking-[0.6em] uppercase mb-6"
           >
-            <h4 className="text-[12px] font-black uppercase tracking-[0.3em] text-brand-dark/50 mb-10 flex items-center justify-between">
-              Macros Alignment <CircleDot className="w-4 h-4 text-brand-green" />
+            Neural Kinetics Dashboard
+          </motion.div>
+          <motion.h3 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-6xl lg:text-5xl font-black uppercase tracking-[-0.05em] text-brand-dark text-center"
+          >
+            Spatial Composition Matrix
+          </motion.h3>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
+          {/* 3D Bar Chart */}
+          <motion.div 
+            initial={{ opacity: 0, y: 100, rotateX: 30 }}
+            whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            className="bg-brand-bg/40 backdrop-blur-3xl rounded-[64px] p-12 lg:p-16 border border-white shadow-2xl group/card hover:shadow-[0_100px_200px_-50px_rgba(15,23,17,0.3)] transition-all duration-1000 overflow-hidden relative"
+          >
+            <div className="absolute top-0 right-0 w-32 h-32 bg-brand-accent/5 blur-3xl rounded-full" />
+            <h4 className="text-[15px] font-black uppercase tracking-[0.4em] text-brand-dark/40 mb-16 flex items-center justify-between">
+              Material Mass <CircleDot className="w-6 h-6 text-brand-green" />
             </h4>
-            <div className="h-56 w-full relative">
+            <div className="h-80 w-full relative">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={nutritionData} margin={{ top: 20, right: 30, left: 30, bottom: 20 }}>
                   <defs>
                     {nutritionData.map((n, i) => (
                       <linearGradient key={`grad-${i}`} id={`barGrad-${i}`} x1="0" y1="0" x2="0" y2="1">
                         <stop offset="0%" stopColor={n.color} stopOpacity={1} />
-                        <stop offset="100%" stopColor={n.color} stopOpacity={0.4} />
+                        <stop offset="100%" stopColor={n.color} stopOpacity={0.2} />
                       </linearGradient>
                     ))}
-                    <filter id="shadow-bar" x="-20%" y="-20%" width="140%" height="140%">
-                      <feDropShadow dx="0" dy="12" stdDeviation="8" floodOpacity="0.4"/>
+                    <filter id="shadow-bar-ultra" x="-40%" y="-40%" width="180%" height="180%">
+                      <feDropShadow dx="0" dy="30" stdDeviation="20" floodOpacity="0.5"/>
                     </filter>
                   </defs>
-                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 14, fontWeight: 900, fill: '#1A2E19', opacity: 0.8 }} />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 16, fontWeight: 900, fill: '#1A2E19', opacity: 0.7 }} />
                   <Tooltip 
-                    cursor={{ fill: 'rgba(255,255,255,0.4)', radius: 10 }}
-                    contentStyle={{ borderRadius: '24px', border: 'none', boxShadow: '0 32px 64px rgba(0,0,0,0.2)', fontSize: '16px', fontWeight: '900', padding: '20px', background: 'white' }}
+                    cursor={{ fill: 'rgba(255,255,255,0.6)', radius: 24 }}
+                    contentStyle={{ borderRadius: '48px', border: 'none', boxShadow: '0 64px 128px rgba(0,0,0,0.3)', fontSize: '24px', fontWeight: '900', padding: '40px', background: 'white' }}
                   />
                   <Bar 
                     dataKey="value" 
-                    radius={[12, 12, 0, 0]} 
-                    animationDuration={2000}
-                    style={{ filter: 'url(#shadow-bar)' }}
+                    radius={[24, 24, 0, 0]} 
+                    animationDuration={3000}
+                    style={{ filter: 'url(#shadow-bar-ultra)' }}
                   >
                     {nutritionData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={`url(#barGrad-${index})`} />
@@ -199,97 +254,120 @@ export function RecipeDisplay({ recipe, isSaved, onSave }: RecipeDisplayProps) {
             </div>
           </motion.div>
 
-          {/* 3D-effect Flavor Radar Chart */}
+          {/* 3D Radar Chart */}
           <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="bg-brand-bg/40 backdrop-blur-3xl rounded-[48px] p-8 lg:p-10 border border-white shadow-[0_24px_48px_-12px_rgba(0,0,0,0.08)] group hover:shadow-[0_48px_80px_-24px_rgba(45,90,39,0.2)] transition-all duration-700"
+            initial={{ opacity: 0, y: 100, rotateX: 30 }}
+            whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+            className="bg-brand-bg/40 backdrop-blur-3xl rounded-[64px] p-12 lg:p-16 border border-white shadow-2xl group/card hover:shadow-[0_100px_200px_-50px_rgba(15,23,17,0.3)] transition-all duration-1000"
           >
-            <h4 className="text-[12px] font-black uppercase tracking-[0.3em] text-brand-dark/50 mb-10 flex items-center justify-between">
-              Flavor Profiling <Scale className="w-4 h-4 text-brand-accent" />
+            <h4 className="text-[15px] font-black uppercase tracking-[0.4em] text-brand-dark/40 mb-16 flex items-center justify-between">
+              Sensory Field <Scale className="w-6 h-6 text-brand-accent" />
             </h4>
-            <div className="h-56 w-full">
+            <div className="h-80 w-full animate-pulse-slow">
               <ResponsiveContainer width="100%" height="100%">
-                <RadarChart cx="50%" cy="50%" outerRadius="80%" data={flavorData}>
-                  <PolarGrid stroke="#1A2E19" strokeOpacity={0.25} strokeWidth={1} />
-                  <PolarAngleAxis dataKey="subject" tick={{ fontSize: 13, fontWeight: 900, fill: '#1A2E19', opacity: 1 }} />
+                <RadarChart cx="50%" cy="50%" outerRadius="85%" data={flavorData}>
+                  <PolarGrid stroke="#1A2E19" strokeOpacity={0.2} strokeWidth={2} />
+                  <PolarAngleAxis dataKey="subject" tick={{ fontSize: 16, fontWeight: 900, fill: '#1A2E19', opacity: 0.8 }} />
                   <Radar
                     name="Intensity"
                     dataKey="A"
-                    stroke="#4CAF50"
-                    strokeWidth={4}
-                    fill="#4CAF50"
+                    stroke="#3ECF8E"
+                    strokeWidth={8}
+                    fill="#3ECF8E"
                     fillOpacity={0.5}
-                    animationDuration={2500}
+                    animationDuration={4000}
                   />
                 </RadarChart>
               </ResponsiveContainer>
             </div>
           </motion.div>
 
-          {/* 3D-effect Time Pie Chart */}
+          {/* 3D Pie Chart */}
           <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-            className="bg-brand-bg/40 backdrop-blur-3xl rounded-[48px] p-8 lg:p-10 border border-white shadow-[0_24px_48px_-12px_rgba(0,0,0,0.08)] group hover:shadow-[0_48px_80px_-24px_rgba(45,90,39,0.2)] transition-all duration-700"
+            initial={{ opacity: 0, y: 100, rotateX: 30 }}
+            whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
+            className="bg-brand-bg/40 backdrop-blur-3xl rounded-[64px] p-12 lg:p-16 border border-white shadow-2xl group/card hover:shadow-[0_100px_200px_-50px_rgba(15,23,17,0.3)] transition-all duration-1000"
           >
-            <h4 className="text-[12px] font-black uppercase tracking-[0.3em] text-brand-dark/50 mb-10 flex items-center justify-between">
-              Process Lifecycle <Clock className="w-4 h-4 text-brand-accent" />
+            <h4 className="text-[15px] font-black uppercase tracking-[0.4em] text-brand-dark/40 mb-16 flex items-center justify-between">
+              Temporal Phase <Clock className="w-6 h-6 text-brand-dark" />
             </h4>
-            <div className="h-56 w-full">
+            <div className="h-80 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <defs>
-                     <filter id="shadow-pie">
-                      <feDropShadow dx="0" dy="12" stdDeviation="15" floodOpacity="0.2"/>
+                     <filter id="shadow-pie-ultra" x="-80%" y="-80%" width="260%" height="260%">
+                      <feDropShadow dx="0" dy="40" stdDeviation="30" floodOpacity="0.4"/>
                     </filter>
                   </defs>
                   <Pie
                     data={timeData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={60}
-                    outerRadius={90}
-                    paddingAngle={12}
+                    innerRadius={80}
+                    outerRadius={120}
+                    paddingAngle={20}
                     dataKey="value"
-                    animationDuration={2000}
-                    style={{ filter: 'url(#shadow-pie)' }}
+                    animationDuration={3000}
+                    style={{ filter: 'url(#shadow-pie-ultra)' }}
                     label={({ name, value }) => `${name}: ${value}m`}
                     labelLine={false}
                   >
                     {timeData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={index === 0 ? '#4CAF50' : '#1A2E19'} stroke="none" />
+                      <Cell key={`cell-${index}`} fill={index === 0 ? '#3ECF8E' : '#0F1711'} stroke="none" />
                     ))}
                   </Pie>
-                  <Tooltip contentStyle={{ borderRadius: '24px', border: 'none', boxShadow: '0 32px 64px rgba(0,0,0,0.2)', fontSize: '16px', fontWeight: '900', padding: '20px', background: 'white' }} />
+                  <Tooltip contentStyle={{ borderRadius: '48px', border: 'none', boxShadow: '0 64px 128px rgba(0,0,0,0.3)', fontSize: '24px', fontWeight: '900', padding: '40px', background: 'white' }} />
                 </PieChart>
               </ResponsiveContainer>
-              <div className="flex justify-center gap-8 mt-4">
-                <div className="flex items-center gap-3 text-[12px] font-black uppercase opacity-60"><div className="w-3 h-3 rounded-full bg-brand-green" /> Prep</div>
-                <div className="flex items-center gap-3 text-[12px] font-black uppercase opacity-60"><div className="w-3 h-3 rounded-full bg-brand-dark" /> Cook</div>
+              <div className="flex justify-center gap-12 mt-10">
+                <div className="flex items-center gap-6 text-[15px] font-black uppercase opacity-60"><div className="w-4 h-4 rounded-full bg-brand-accent animate-pulse" /> PREP PHASE</div>
+                <div className="flex items-center gap-6 text-[15px] font-black uppercase opacity-60"><div className="w-4 h-4 rounded-full bg-brand-dark" /> SYNTHESIS</div>
               </div>
             </div>
           </motion.div>
         </div>
       </div>
       
-      <div className="mt-12 pt-8 flex items-center justify-between border-t border-brand-bg/50 shrink-0">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xl bg-brand-dark flex items-center justify-center">
-            <div className="w-3 h-3 rounded-full bg-brand-accent animate-pulse" />
+      {/* Footer System Info */}
+      <div className="mt-48 pt-24 flex flex-col xl:flex-row items-center justify-between gap-16 border-t-2 border-brand-dark/5 shrink-0">
+        <div className="flex items-center gap-10">
+          <div className="w-24 h-24 rounded-[32px] bg-brand-dark flex items-center justify-center shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] relative overflow-hidden group/logo">
+            <div className="absolute inset-0 bg-brand-accent/20 opacity-0 group-hover/logo:opacity-100 transition-all duration-700" />
+            <motion.div 
+              animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="w-10 h-10 rounded-full bg-brand-accent blur-xl absolute" 
+            />
+            <div className="w-5 h-5 rounded-full bg-brand-accent relative z-10 shadow-[0_0_20px_rgba(62,207,142,0.8)]" />
           </div>
           <div>
-            <p className="text-[10px] font-black text-brand-dark uppercase tracking-widest leading-none">Gemini 2.5 Flash</p>
-            <p className="text-[8px] font-bold opacity-30 uppercase tracking-[0.2em] mt-1">Neural Culinary Engine v11.0</p>
+            <p className="text-3xl font-black text-brand-dark uppercase tracking-[-0.03em] leading-none">FLAVOR NEURAL CORE</p>
+            <p className="text-[12px] font-black opacity-30 uppercase tracking-[0.8em] mt-4 flex items-center gap-4">
+              <span className="w-3 h-3 bg-brand-accent rounded-full" />
+              Processing Layer 14 // Enterprise Silicon v2
+            </p>
           </div>
         </div>
-        <div className="flex gap-1">
-          {[...Array(5)].map((_, i) => (
-            <div key={i} className={`h-1 w-8 rounded-full ${i === 0 ? 'bg-brand-accent' : 'bg-brand-bg'}`} />
+        
+        <div className="flex gap-4">
+          {[...Array(8)].map((_, i) => (
+            <motion.div 
+              key={i} 
+              animate={{ 
+                height: [6, 24, 6], 
+                backgroundColor: i < 3 ? "#3ECF8E" : "#E2E8F0" 
+              }}
+              transition={{ 
+                duration: 1.5 + i * 0.1, 
+                repeat: Infinity, 
+                ease: "easeInOut" 
+              }}
+              className="h-1 w-20 rounded-full" 
+            />
           ))}
         </div>
       </div>
