@@ -13,19 +13,19 @@ interface RecipeDisplayProps {
 }
 
 export function RecipeDisplay({ recipe, isSaved, onSave }: RecipeDisplayProps) {
-  const flavorData = [
+  const flavorData = recipe.flavorProfile ? [
     { subject: 'Sweet', A: recipe.flavorProfile.sweet, fullMark: 10 },
     { subject: 'Spicy', A: recipe.flavorProfile.spicy, fullMark: 10 },
     { subject: 'Sour', A: recipe.flavorProfile.sour, fullMark: 10 },
     { subject: 'Bitter', A: recipe.flavorProfile.bitter, fullMark: 10 },
     { subject: 'Umami', A: recipe.flavorProfile.umami, fullMark: 10 },
-  ];
+  ] : [];
 
-  const nutritionData = [
+  const nutritionData = recipe.nutrition ? [
     { name: 'Protein', value: recipe.nutrition.protein, color: '#4CAF50' },
     { name: 'Carbs', value: recipe.nutrition.carbs, color: '#2D5A27' },
     { name: 'Fat', value: recipe.nutrition.fat, color: '#1A2E19' },
-  ];
+  ] : [];
 
   return (
     <motion.div
@@ -59,9 +59,11 @@ export function RecipeDisplay({ recipe, isSaved, onSave }: RecipeDisplayProps) {
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-brand-accent"></div> {recipe.servings} SERVINGS
             </div>
-            <div className="flex items-center gap-2 text-brand-green font-black">
-              <Scale className="w-3 h-3" /> {recipe.nutrition.calories} KCAL
-            </div>
+            {recipe.nutrition && (
+              <div className="flex items-center gap-2 text-brand-green font-black">
+                <Scale className="w-3 h-3" /> {recipe.nutrition.calories} KCAL
+              </div>
+            )}
           </div>
         </div>
         <button 
@@ -81,56 +83,60 @@ export function RecipeDisplay({ recipe, isSaved, onSave }: RecipeDisplayProps) {
         {/* Left Column: Visual Data */}
         <div className="xl:col-span-4 space-y-10">
           {/* Nutrition Chart */}
-          <div className="bg-brand-bg rounded-3xl p-6 border border-brand-dark/5">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-accent mb-6 flex items-center gap-2">
-              <CircleDot className="w-3 h-3" /> Macros / G
-            </h3>
-            <div className="h-40 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={nutritionData} layout="vertical" margin={{ left: -20, right: 20 }}>
-                  <XAxis type="number" hide />
-                  <YAxis dataKey="name" type="category" hide />
-                  <Tooltip 
-                    cursor={{ fill: 'transparent' }}
-                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)', fontSize: '12px', fontWeight: 'bold' }}
-                  />
-                  <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={24}>
-                    {nutritionData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
+          {recipe.nutrition && (
+            <div className="bg-brand-bg rounded-3xl p-6 border border-brand-dark/5">
+              <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-accent mb-6 flex items-center gap-2">
+                <CircleDot className="w-3 h-3" /> Macros / G
+              </h3>
+              <div className="h-40 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={nutritionData} layout="vertical" margin={{ left: -20, right: 20 }}>
+                    <XAxis type="number" hide />
+                    <YAxis dataKey="name" type="category" hide />
+                    <Tooltip 
+                      cursor={{ fill: 'transparent' }}
+                      contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)', fontSize: '12px', fontWeight: 'bold' }}
+                    />
+                    <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={24}>
+                      {nutritionData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="flex justify-between mt-4">
+                {nutritionData.map((n) => (
+                  <div key={n.name} className="text-center">
+                    <p className="text-[10px] font-black uppercase opacity-30">{n.name}</p>
+                    <p className="text-sm font-black">{n.value}g</p>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="flex justify-between mt-4">
-              {nutritionData.map((n) => (
-                <div key={n.name} className="text-center">
-                  <p className="text-[10px] font-black uppercase opacity-30">{n.name}</p>
-                  <p className="text-sm font-black">{n.value}g</p>
-                </div>
-              ))}
-            </div>
-          </div>
+          )}
 
           {/* Flavor Profile Radar */}
-          <div className="bg-brand-bg rounded-3xl p-6 border border-brand-dark/5">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-accent mb-2">Flavor Profile</h3>
-            <div className="h-48 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <RadarChart cx="50%" cy="50%" outerRadius="70%" data={flavorData}>
-                  <PolarGrid stroke="#1A2E19" strokeOpacity={0.05} />
-                  <PolarAngleAxis dataKey="subject" tick={{ fontSize: 9, fontWeight: 900, fill: '#1A2E19', opacity: 0.4 }} />
-                  <Radar
-                    name="Flavor"
-                    dataKey="A"
-                    stroke="#4CAF50"
-                    fill="#4CAF50"
-                    fillOpacity={0.3}
-                  />
-                </RadarChart>
-              </ResponsiveContainer>
+          {recipe.flavorProfile && (
+            <div className="bg-brand-bg rounded-3xl p-6 border border-brand-dark/5">
+              <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-accent mb-2">Flavor Profile</h3>
+              <div className="h-48 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <RadarChart cx="50%" cy="50%" outerRadius="70%" data={flavorData}>
+                    <PolarGrid stroke="#1A2E19" strokeOpacity={0.05} />
+                    <PolarAngleAxis dataKey="subject" tick={{ fontSize: 9, fontWeight: 900, fill: '#1A2E19', opacity: 0.4 }} />
+                    <Radar
+                      name="Flavor"
+                      dataKey="A"
+                      stroke="#4CAF50"
+                      fill="#4CAF50"
+                      fillOpacity={0.3}
+                    />
+                  </RadarChart>
+                </ResponsiveContainer>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Middle Column: Ingredients */}
